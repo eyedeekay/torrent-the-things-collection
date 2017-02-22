@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+URL=$1
+WEBSEED_URL=$(\youtube-dl -g $URL)
+CLEANED_WEBSEED_URL=$(echo $WEBSEED_URL | sed 's/\s.*$//')
+FILE_NAME=$(\youtube-dl --get-filename $URL)
+echo $CLEANED_WEBSEED_URL
+CLEANED_FILE_NAME=$(echo $FILE_NAME | tr " " "_" )
+echo $CLEANED_FILE_NAME
+youtube-dl $URL
+mv "$FILE_NAME" $CLEANED_FILE_NAME
+mktorrent --no-date --announce=\"http://opensharing.org:2710/announce\" --name=$CLEANED_FILE_NAME --web-seed=\"$CLEANED_WEBSEED_URL\" --output=$CLEANED_FILE_NAME.torrent $CLEANED_FILE_NAME
